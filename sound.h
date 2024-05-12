@@ -10,6 +10,7 @@ namespace sound
     short SineWave(double time, double freq, double amp);
     short SquareWave(double time, double freq, double amp);
     short SawtoothWave(double time, double freq, double amp);
+    short TriangleWave(double time, double freq, double amp);
 
     short Noise(double amp);
 }

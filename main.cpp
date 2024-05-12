@@ -18,7 +18,7 @@ int main()
     sf::Sound silence;
 
 
-    for (int i=0; i < 44100 * 0.5; i++)       // 0.5 seconds worth of sound
+    for (int i=0; i < 44100 * 0.5; i++)       // 0.5 seconds worth of sound at 44100 hz
     {
         samples.push_back(sound::SineWave(i, 392, 0.9));
     }
@@ -28,9 +28,14 @@ int main()
         samples.push_back(sound::SquareWave(i, 392, 0.9));
     }
 
-    for (int i=0; i < 44100 * 3.0; i++)       // 0.5 seconds worth of sound
+    for (int i=0; i < 44100 * 0.5; i++)       // 0.5 seconds worth of sound
     {
         samples.push_back(sound::SawtoothWave(i, 392, 0.9));
+    }
+
+    for (int i=0; i < 44100 * 5.0; i++)       // 5 seconds worth of sound
+    {
+        samples.push_back(sound::TriangleWave(i, 392, 0.9));
     }
 
     for (int i=0; i < 44100 * 1; i++)       // 1 second worth of sound

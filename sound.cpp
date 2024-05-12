@@ -50,6 +50,24 @@ namespace sound
         return result;
     }
 
+    short TriangleWave(double time, double freq, double amp)
+    {
+        short result = 0;
+
+        int tpc = 44100 / freq;
+        int cyclepart = int(time) % tpc;
+        int halfcycle = tpc / 2;
+        short amplitude = 32767 * amp;
+
+        if (cyclepart < halfcycle) {
+            result = (short)((amplitude * 2 * cyclepart) / halfcycle - amplitude);
+        } else {
+            result = (short)(amplitude - (amplitude * 2 * (cyclepart - halfcycle)) / halfcycle);
+        }
+
+        return result;
+    }
+
     short Noise(double amp)
     {
         short result = 0;
