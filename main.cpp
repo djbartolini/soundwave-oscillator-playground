@@ -28,6 +28,11 @@ int main()
         samples.push_back(sound::SquareWave(i, 392, 0.9));
     }
 
+    for (int i=0; i < 44100 * 3.0; i++)       // 0.5 seconds worth of sound
+    {
+        samples.push_back(sound::SawtoothWave(i, 392, 0.9));
+    }
+
     for (int i=0; i < 44100 * 1; i++)       // 1 second worth of sound
     {
         samples.push_back(sound::Noise(0.9));
