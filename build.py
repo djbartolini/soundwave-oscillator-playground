@@ -8,7 +8,7 @@ print("Compiling project . . . . . .")
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 # Compile command
-compile_line = os.system("clang++ main.cpp sound.cpp -o sound -I/opt/homebrew/opt/sfml/include -L/opt/homebrew/opt/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio")
+compile_line = os.system("clang++ main.cpp input.cpp synth.cpp waveform.cpp -o synth -I/opt/homebrew/opt/sfml/include -L/opt/homebrew/opt/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -std=c++20")
 
 # Compile flag
 if compile_line == 0:
@@ -26,7 +26,7 @@ if compile_line == 0:
         platform = 'macos'
 
     # Command alias
-    alias_line = f"alias generate='{os.path.abspath('./sound')}'"
+    alias_line = f"alias generate='{os.path.abspath('./synth')}'"
 
     shell_profile = os.path.expanduser("~/.bashrc" if platform == 'linux' else "~/.bash_profile")
     if not any("sound" in line for line in open(shell_profile)):

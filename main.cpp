@@ -1,87 +1,42 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <vector>
-#include <iostream>
-#include <thread>
-#include <chrono>
-#include "sound.h"
+#include "synth.h"
+#include "input.h"
+#include "ui.h"
 
-using namespace std;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Sine Wave Oscillator");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Sound Wave Oscillator");
+    Synth synth;
 
-    sf::SoundBuffer buffer;
-    vector<sf::Int16> samples;
+    // Load SFML Font
+    sf::Font font;
 
-    sf::Sound silence;
+    std::string fontPath = "/Library/Fonts/Arial\ Unicode.ttf";
 
-
-    for (int i=0; i < 44100 * 0.5; i++)       // 0.5 seconds worth of sound at 44100 hz
+    if (!font.loadFromFile(fontPath))
     {
-        samples.push_back(sound::SineWave(i, 392, 0.9));
+        printf("Error loading SFML Font!");
+        // TODO: Add real error handling
     }
 
-    for (int i=0; i < 44100 * 0.5; i++)       // 0.5 seconds worth of sound
-    {
-        samples.push_back(sound::SquareWave(i, 392, 0.9));
-    }
+    sf::Text instructions = renderUI(font);
 
-    for (int i=0; i < 44100 * 0.5; i++)       // 0.5 seconds worth of sound
-    {
-        samples.push_back(sound::SawtoothWave(i, 392, 0.9));
-    }
-
-    for (int i=0; i < 44100 * 5.0; i++)       // 5 seconds worth of sound
-    {
-        samples.push_back(sound::TriangleWave(i, 392, 0.9));
-    }
-
-    for (int i=0; i < 44100 * 1; i++)       // 1 second worth of sound
-    {
-        samples.push_back(sound::Noise(0.9));
-    }
-
-
-
-    if (!buffer.loadFromSamples(&samples[0], samples.size(), 2, 44100))
-    {
-        // Error loading buffer
-        return 1;
-    }
-
-    sf::Sound sound;
-    sound.setBuffer(buffer);
-
-    if (sound.getStatus() != sf::Sound::Playing)
-    {
-        sound.play();
-    }
-
-    printf("AUDIO STATUS: %i\n ", sound.getStatus());
-
-
-    if (sound.getStatus() != sf::Sound::Playing)
-    {
-        // Error playing sound
-        return 1;
-    }
-
-    // Game Loop
     while (window.isOpen())
     {
         sf::Event event;
 
-        // printf("AUDIO STATUS: %i\n", sound.getStatus());
-
-        while(window.pollEvent(event))
+        while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-            {
                 window.close();
-            }
         }
+
+        handleInput(synth);
+
+        window.clear();
+        window.draw(instructions);
+        window.display();
     }
 
     return 0;

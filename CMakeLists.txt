@@ -9,7 +9,13 @@ find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 
 add_executable(sine_wave_oscillator
         main.cpp
-        sound.cpp)
+        waveform.cpp
+        synth.cpp
+        synth.h
+        input.h
+        input.cpp
+        ui.h
+        ui.cpp)
 
 target_include_directories(sine_wave_oscillator PRIVATE ${SFML_INCLUDE_DIR})
 
