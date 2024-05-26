@@ -8,7 +8,7 @@ print("Compiling project . . . . . .")
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 # Compile command
-compile_line = os.system("clang++ main.cpp input.cpp synth.cpp waveform.cpp -o synth -I/opt/homebrew/opt/sfml/include -L/opt/homebrew/opt/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -std=c++20")
+compile_line = os.system("clang++ main.cpp input.cpp synth.cpp waveform.cpp ui.cpp -o synth -I/opt/homebrew/opt/sfml/include -L/opt/homebrew/opt/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -std=c++20")
 
 # Compile flag
 if compile_line == 0:

@@ -1,3 +1,4 @@
+
 #include <SFML/Graphics.hpp>
 #include "synth.h"
 #include "input.h"
@@ -12,7 +13,7 @@ int main()
     // Load SFML Font
     sf::Font font;
 
-    std::string fontPath = "/Library/Fonts/Arial\ Unicode.ttf";
+    std::string fontPath = "/Library/Fonts/Arial Unicode.ttf";
 
     if (!font.loadFromFile(fontPath))
     {

@@ -14,6 +14,7 @@ class Synth : public sf::SoundStream
 {
 public:
     Synth();
+    ~Synth();
     void setFrequency(double freq);
     void setWaveType(WaveType type);
 

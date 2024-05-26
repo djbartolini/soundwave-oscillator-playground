@@ -2,60 +2,64 @@
 #include <cmath>
 #include "waveform.h"
 
+// Sine (wave) is build into math.h
 double sineWave(double time, double freq)
 {
     return AMPLITUDE * sin(TWO_PI * freq * time);
 }
 
+// Square wave:
+// We want AMPLITUDE to be zero when time
+// gets halfway through each `tick`
+// And then AMPLITUDE to be 1.0 when time
+// gets to the first half of the `tick`
 double squareWave(double time, double freq)
 {
-    short result = 0;
+    double period = 1.0 / freq; // Period of one cycle in seconds
+    double cyclepart = fmod(time, period);
 
-    int tpc = 44100 / freq;      // ticks per cycle
-    int cyclepart = int(time) % tpc;
-    int halfcycle = tpc / 2;
-
-    if (cyclepart < halfcycle) {
-        result = AMPLITUDE;
+    if (cyclepart < period / 2.0) {
+        return AMPLITUDE;
+    } else {
+        return -AMPLITUDE;
     }
-
-    return result;
 }
 
+// Sawtooth:
+// Waveform must rise steadily throughout
+// each `tick`
+// Then AMPLITUDE must jump back to 0
+// to begin the next `tick`
 double sawtoothWave(double time, double freq)
 {
-    short result = 0;
+    double period = 1.0 / freq; // Period of one cycle in seconds
+    double cyclepart = fmod(time, period);
 
-    int tpc = 44100 / freq;     // ticks per cycle
-    int cyclepart = int(time) % tpc;
-
-    result = (short)((AMPLITUDE * 2 * cyclepart) / tpc - AMPLITUDE);
-
-    return result;
+    return (2.0 * AMPLITUDE * cyclepart / period) - AMPLITUDE;
 }
 
+// Triangle:
+// Go up halfway
+// Go down the other half
 double triangleWave(double time, double freq)
 {
-    short result = 0;
+    double period = 1.0 / freq; // Period of one cycle in seconds
+    double cyclepart = fmod(time, period);
+    double halfperiod = period / 2.0;
 
-    int tpc = 44100 / freq;
-    int cyclepart = int(time) % tpc;
-    int halfcycle = tpc / 2;
-
-    if (cyclepart < halfcycle) {
-        result = (short)((AMPLITUDE * 2 * cyclepart) / halfcycle - AMPLITUDE);
+    if (cyclepart < halfperiod) {
+        return (2.0 * AMPLITUDE * cyclepart / halfperiod) - AMPLITUDE;
     } else {
-        result = (short)(AMPLITUDE - (AMPLITUDE * 2 * (cyclepart - halfcycle)) / halfcycle);
+        return (2.0 * AMPLITUDE * (halfperiod - cyclepart + halfperiod) / halfperiod) - AMPLITUDE;
     }
-
-    return result;
 }
 
+// White noise
 double noise(double amp)
 {
     short result = 0;
 
-    result = rand() % AMPLITUDE;
+    result = AMPLITUDE * (2.0 * rand() / RAND_MAX - 1.0);
 
     return result;
 }
