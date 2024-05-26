@@ -4,7 +4,6 @@
 #include "input.h"
 #include "ui.h"
 
-
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Sound Wave Oscillator");
@@ -25,16 +24,10 @@ int main()
 
     while (window.isOpen())
     {
-        sf::Event event;
+        // Handle input and events
+        handleInput(synth, window);
 
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        handleInput(synth);
-
+        // Clear the window and draw the UI
         window.clear();
         window.draw(instructions);
         window.display();

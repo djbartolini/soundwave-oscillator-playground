@@ -7,24 +7,39 @@
 #include <cmath>
 
 // Constructor
-Synth::Synth() : currentSample(0), frequency(0.0), waveType(WaveType::SINE)
+Synth::Synth() : currentSample(0), frequency(440.0), octave(0), waveType(WaveType::SINE)
 {
     initialize(1, SAMPLE_RATE); // Mono sound
 }
 
 // Destructor
-Synth::~Synth()
-{
+Synth::~Synth() {}
 
+// Get octave
+int Synth::getOctave()
+{
+    return octave;
 }
 
-// Gets frequency in input.cpp
+// Go up an octave
+void Synth::octaveUp()
+{
+    octave++;
+}
+
+// Go down an octave
+void Synth::octaveDown()
+{
+    octave--;
+}
+
+// Sets frequency in input.cpp
 void Synth::setFrequency(double freq)
 {
     frequency = freq;
 }
 
-// Gets waveform type in input.cpp
+// Sets waveform type in input.cpp
 void Synth::setWaveType(WaveType type)
 {
     waveType = type;
@@ -35,24 +50,26 @@ bool Synth::onGetData(Chunk& data)
 {
     samples.resize(SAMPLE_RATE / 10);
 
+    double adjustedFreq = frequency * std::pow(2.0, octave);
+
     for (unsigned i = 0; i < samples.size(); i++)
     {
         // Sample rate = 44100 hz
         double time = currentSample / static_cast<double>(SAMPLE_RATE);
 
-        // push waveform buffer to sample
+        // Generate waveform based on the wave type and adjusted frequency
         switch (waveType) {
             case WaveType::SINE:
-                samples[i] = sineWave(time, frequency);
+                samples[i] = sineWave(time, adjustedFreq);
                 break;
             case WaveType::SQUARE:
-                samples[i] = squareWave(time, frequency);
+                samples[i] = squareWave(time, adjustedFreq);
                 break;
             case WaveType::SAWTOOTH:
-                samples[i] = sawtoothWave(time, frequency);
+                samples[i] = sawtoothWave(time, adjustedFreq);
                 break;
             case WaveType::TRIANGLE:
-                samples[i] = triangleWave(time, frequency);
+                samples[i] = triangleWave(time, adjustedFreq);
         }
 
         currentSample++;

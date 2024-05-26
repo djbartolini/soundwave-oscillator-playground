@@ -15,14 +15,24 @@ class Synth : public sf::SoundStream
 public:
     Synth();
     ~Synth();
+
+    int octave;
+
     void setFrequency(double freq);
     void setWaveType(WaveType type);
+
+    int getOctave();
+
+    void octaveUp();
+    void octaveDown();
+
 
 private:
     virtual bool onGetData(Chunk& data) override;
     virtual void onSeek(sf::Time timeOffset) override;
 
     std::vector<sf::Int16> samples;
+
     unsigned currentSample;
     double frequency;
     WaveType waveType;

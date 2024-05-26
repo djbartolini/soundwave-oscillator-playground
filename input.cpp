@@ -1,7 +1,3 @@
-//
-// Created by Daniel Bartolini on 5/25/24.
-//
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <map>
@@ -22,7 +18,12 @@ std::map<sf::Keyboard::Key, double> keyToFrequency =
                 {sf::Keyboard::Y, 415.30}, // G#4 / Ab4
                 {sf::Keyboard::H, 440.00}, // A4
                 {sf::Keyboard::U, 466.16}, // Bb4 / A#4
-                {sf::Keyboard::J, 493.86} // B4
+                {sf::Keyboard::J, 493.86}, // B4
+                {sf::Keyboard::K, 523.25}, // C5
+                {sf::Keyboard::O, 554.37}, // C#5 / Db5
+                {sf::Keyboard::L, 587.33}, // D5
+                {sf::Keyboard::P, 622.25}, // D#5 / Eb5
+                {sf::Keyboard::Semicolon, 659.26} // E5
         };
 
 // keys 1, 2, 3, and 4
@@ -36,59 +37,54 @@ std::map<sf::Keyboard::Key, WaveType> keyToWaveType =
         };
 
 
-void handleInput(Synth& synth)
+void handleInput(Synth& synth, sf::RenderWindow& window)
 {
-    // load key flag
-    bool isKeyPressed = false;
+    // Event object to hold the event data
+    sf::Event event;
 
-    // loop to listen for changes in waveform
-    // keys 1, 2, 3, or 4
-    for (const auto& [key, waveType] : keyToWaveType)
+    while (window.pollEvent(event))
     {
-        if (sf::Keyboard::isKeyPressed(key))
+        if (event.type == sf::Event::Closed)
         {
-            synth.setWaveType(waveType);
+            window.close();
         }
-    }
-
-    /*
-     * KEY MAPPING
-     * (PRETTY SELF EXPLANATORY):
-     * `A`: C,
-     * `W`: C#,
-     * `S`: D,
-     * `E`: Eb,
-     * `D`: E,
-     * `F`: F,
-     * `T`: F#,
-     * `G`: G,
-     * `Y`: Ab,
-     * `H`: A,
-     * `U`: Bb,
-     * `J`: B
-     */
-
-    for (const auto& [key, freq] : keyToFrequency)
-    {
-        if (sf::Keyboard::isKeyPressed(key))
+        else if (event.type == sf::Event::KeyPressed)
         {
-            synth.setFrequency(freq);
 
-            if (synth.getStatus() != sf::SoundStream::Playing)
+            // Handle key press events
+            if (event.key.code == sf::Keyboard::Up)
             {
-                synth.play();
+                synth.octaveUp();
+                printf("OCTAVE: %i \n", synth.getOctave());
+            }
+            else if (event.key.code == sf::Keyboard::Down)
+            {
+                synth.octaveDown();
+                printf("OCTAVE: %i \n", synth.getOctave());
+            }
+            else if (keyToWaveType.find(event.key.code) != keyToWaveType.end())
+            {
+                synth.setWaveType(keyToWaveType[event.key.code]);
             }
 
-            // key flag is true
-            isKeyPressed = true;
-            break;
+            else if (keyToFrequency.find(event.key.code) != keyToFrequency.end())
+            {
+                synth.setFrequency(keyToFrequency[event.key.code]);
+
+                if (synth.getStatus() != sf::SoundStream::Playing)
+                {
+                    synth.play();
+                }
+
+            }
+        }
+        else if (event.type == sf::Event::KeyReleased)
+        {
+            // Stop the synth when the key is released
+            if (keyToFrequency.find(event.key.code) != keyToFrequency.end())
+            {
+                synth.stop();
+            }
         }
     }
-
-    // when we release the key, the synth stops
-    if (!isKeyPressed)
-    {
-        synth.stop();
-    }
-
 }

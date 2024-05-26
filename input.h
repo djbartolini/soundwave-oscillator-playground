@@ -6,6 +6,6 @@
 #define SINE_WAVE_OSCILLATOR_INPUT_H
 
 // Assign keyboard inputs to frequencies
-void handleInput(Synth& synth);
+void handleInput(Synth& synth, sf::RenderWindow& window);
 
 #endif //SINE_WAVE_OSCILLATOR_INPUT_H
