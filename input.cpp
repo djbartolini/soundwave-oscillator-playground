@@ -1,8 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <map>
+#include <iostream>
 #include "synth.h"
 #include "input.h"
+
+
+std::map<sf::Keyboard::Key, bool> keyState;
 
 // Map for "piano" key inputs
 std::map<sf::Keyboard::Key, double> keyToFrequency =
@@ -26,6 +30,7 @@ std::map<sf::Keyboard::Key, double> keyToFrequency =
                 {sf::Keyboard::Semicolon, 659.26} // E5
         };
 
+
 // keys 1, 2, 3, and 4
 // set different waveforms
 std::map<sf::Keyboard::Key, WaveType> keyToWaveType =
@@ -41,6 +46,7 @@ void handleInput(Synth& synth, sf::RenderWindow& window)
 {
     // Event object to hold the event data
     sf::Event event;
+    bool isAnyKeyPressed = false;
 
     while (window.pollEvent(event))
     {
@@ -65,11 +71,17 @@ void handleInput(Synth& synth, sf::RenderWindow& window)
             else if (keyToWaveType.find(event.key.code) != keyToWaveType.end())
             {
                 synth.setWaveType(keyToWaveType[event.key.code]);
+                std::cout << "WAVETYPE: " << synth.getWaveType() << std::endl;
             }
 
             else if (keyToFrequency.find(event.key.code) != keyToFrequency.end())
             {
-                synth.setFrequency(keyToFrequency[event.key.code]);
+                // old monophonic code
+                // synth.setFrequency(keyToFrequency[event.key.code]);
+
+                synth.noteOn(keyToFrequency[event.key.code]);
+                keyState[event.key.code] = true;
+                isAnyKeyPressed = true;
 
                 if (synth.getStatus() != sf::SoundStream::Playing)
                 {
@@ -83,7 +95,9 @@ void handleInput(Synth& synth, sf::RenderWindow& window)
             // Stop the synth when the key is released
             if (keyToFrequency.find(event.key.code) != keyToFrequency.end())
             {
+                synth.noteOff(keyToFrequency[event.key.code]);
                 synth.stop();
+                isAnyKeyPressed = false;
             }
         }
     }
