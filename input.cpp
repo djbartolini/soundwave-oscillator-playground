@@ -48,6 +48,11 @@ void handleInput(Synth& synth, sf::RenderWindow& window)
     sf::Event event;
     bool isAnyKeyPressed = false;
 
+    // Initialize key states
+    for (const auto& [key, _] : keyToFrequency) {
+        keyState[key] = false;
+    }
+
     while (window.pollEvent(event))
     {
         if (event.type == sf::Event::Closed)
