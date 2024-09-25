@@ -20,16 +20,25 @@ int main()
         // TODO: Add real error handling
     }
 
-    sf::Text instructions = renderUI(font);
 
     while (window.isOpen())
     {
         // Handle input and events
         handleInput(synth, window);
 
+        std::string waveType = synth.getWaveType();
+
+        std::array<sf::Text, 4> instructions = renderUI(font, waveType);
+
         // Clear the window and draw the UI
         window.clear();
-        window.draw(instructions);
+
+        // Draw each instruction
+        for (const auto& instruction : instructions)
+        {
+            window.draw(instruction);
+        }
+
         window.display();
     }
 

@@ -62,3 +62,4 @@ private:
 };
 
 #endif //SINE_WAVE_OSCILLATOR_SYNTH_H
+

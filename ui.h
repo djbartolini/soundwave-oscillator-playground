@@ -6,8 +6,9 @@
 #define SINE_WAVE_OSCILLATOR_UI_H
 
 #include <SFML/Graphics.hpp>
+#include <array>
 
-sf::Text renderUI(const sf::Font& font);
+std::array<sf::Text, 4> renderUI(const sf::Font& font, std::string waveType);
 
 
 #endif //SINE_WAVE_OSCILLATOR_UI_H
